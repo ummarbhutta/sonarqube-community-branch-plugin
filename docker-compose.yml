@@ -12,8 +12,6 @@ services:
         SONARQUBE_VERSION: ${SONARQUBE_VERSION}
         PLUGIN_VERSION: ${PLUGIN_VERSION}
     container_name: sonarqube
-    ports:
-      - 9000:9000
     networks:
       - sonarnet
     environment:
@@ -23,6 +21,7 @@ services:
     volumes:
       - sonarqube_conf:/opt/sonarqube/conf
       - sonarqube_data:/opt/sonarqube/data
+    restart: unless-stopped
   db:
     image: postgres:11
     container_name: postgres
@@ -34,12 +33,34 @@ services:
     volumes:
       - postgresql:/var/lib/postgresql
       - postgresql_data:/var/lib/postgresql/data
+    restart: unless-stopped
+  proxy:
+    image: sq-nginx:1.26.1
+    container_name: nginx
+    networks:
+      - sonarnet
+    build: ./nginx
+    ports:
+      - 443:${LISTEN_PORT}
+    environment:
+      - LISTEN_PORT
+      - LISTEN_PROTOCOL
+      - SSL_CERT
+      - SSL_PRIVATE_KEY
+    volumes:
+      - ./nginx_data/ssl/certificate.crt:/etc/ssl/certificates/server.crt
+      - ./nginx_data/ssl/private.key:/etc/ssl/certificates/server.key
+      - nginx_data:/var/log/nginx
+    depends_on:
+      - sonarqube
+    restart: unless-stopped
 
 volumes:
   sonarqube_conf:
   sonarqube_data:
   postgresql:
   postgresql_data:
+  nginx_data:
 
 networks:
   sonarnet:
