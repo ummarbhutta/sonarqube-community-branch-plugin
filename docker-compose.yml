@@ -1,4 +1,4 @@
-name: sq-community-branch-plugin
+name:  sonarqube-community-branch-plugin
 
 services:
   sonarqube:
