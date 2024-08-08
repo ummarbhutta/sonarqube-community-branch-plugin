@@ -41,15 +41,16 @@ services:
       - sonarnet
     build: ./nginx
     ports:
-      - 443:${LISTEN_PORT}
+      - ${LISTEN_PORT_HTTP}:80
+      - ${LISTEN_PORT_HTTPS}:443
     environment:
-      - LISTEN_PORT
+      - TZ
+      - LISTEN_PORT_HTTP
+      - LISTEN_PORT_HTTPS
       - LISTEN_PROTOCOL
-      - SSL_CERT
-      - SSL_PRIVATE_KEY
     volumes:
-      - ./nginx_data/ssl/certificate.crt:/etc/ssl/certificates/server.crt
-      - ./nginx_data/ssl/private.key:/etc/ssl/certificates/server.key
+      - ${SSL_CERT}:/etc/ssl/certificates/server.crt
+      - ${SSL_PRIVATE_KEY}:/etc/ssl/certificates/server.key
       - nginx_data:/var/log/nginx
     depends_on:
       - sonarqube
