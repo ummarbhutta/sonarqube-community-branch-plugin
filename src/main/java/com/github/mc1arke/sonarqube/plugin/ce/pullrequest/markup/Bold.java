@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2022 Michael Clarke
+ * Copyright (C) 2024 Michael Clarke
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,30 +16,17 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  */
-package com.github.mc1arke.sonarqube.plugin.almclient.github.v4;
+package com.github.mc1arke.sonarqube.plugin.ce.pullrequest.markup;
 
-import io.aexp.nodes.graphql.GraphQLRequestEntity;
-import io.aexp.nodes.graphql.GraphQLTemplate;
-import io.aexp.nodes.graphql.InputObject;
-import org.sonar.api.ce.ComputeEngineSide;
-import org.sonar.api.server.ServerSide;
+public class Bold extends Node {
 
-@ComputeEngineSide
-@ServerSide
-public final class DefaultGraphqlProvider implements GraphqlProvider {
-
-    @Override
-    public GraphQLTemplate createGraphQLTemplate() {
-        return new GraphQLTemplate();
+    public Bold(Node... children) {
+        super(children);
     }
 
     @Override
-    public GraphQLRequestEntity.RequestBuilder createRequestBuilder() {
-        return GraphQLRequestEntity.Builder();
+    boolean isValidChild(Node node) {
+        return node instanceof Text;
     }
 
-    @Override
-    public <T> InputObject.Builder<T> createInputObject() {
-        return new InputObject.Builder<>();
-    }
 }
